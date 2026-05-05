@@ -29,14 +29,6 @@ jobs:
         run: |
           echo "GIT_BRANCH=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
 
-      - name: Set main docker image tag
-        run: |
-          if [[ "${{ env.GIT_BRANCH }}" == "main" ]] || [[ "${{ env.GIT_BRANCH }}" == "master" ]]; then
-            echo "MAIN_DOCKER_TAG=latest" >> $GITHUB_ENV
-          else
-            echo "MAIN_DOCKER_TAG=${{ env.GIT_BRANCH }}" >> $GITHUB_ENV
-          fi
-
       - name: Crop SHA
         run: echo "SHORT_SHA=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
 
@@ -79,7 +71,6 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:${{ env.SHORT_SHA }}
             ghcr.io/${{ github.repository }}:${{ env.GIT_BRANCH }}
-            ghcr.io/${{ github.repository }}:${{ env.MAIN_DOCKER_TAG }}
 
       - name: Build and push (tag)
         if: startsWith(github.ref, 'refs/tags/')
