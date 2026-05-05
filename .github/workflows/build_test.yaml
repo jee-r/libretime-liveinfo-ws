@@ -1,0 +1,30 @@
+name: Build_Test
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  push:
+    branches:
+      - '*'
+      - '!main'
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build:
+    name: Test build docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Build docker image
+        run: docker build -f Containerfile .
