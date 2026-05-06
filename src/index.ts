@@ -16,6 +16,12 @@ const server = http.createServer((req, res) => {
     }));
     return;
   }
+  if (req.method === 'GET' && req.url === '/ws/live-info') {
+    const data = getLastData();
+    res.writeHead(data ? 200 : 503, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data ?? { error: 'No data yet' }));
+    return;
+  }
   res.writeHead(404);
   res.end();
 });
